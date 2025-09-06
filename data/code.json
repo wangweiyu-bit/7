@@ -1,0 +1,7 @@
+[
+  {"id":"ij-batch-threshold","title":"ImageJ 批量阈值宏","category":"图像分析宏","tags":["ImageJ","Batch","阈值"],"desc":"对文件夹内图片批量阈值分割与ROI输出。","free":true,"link":"../assets/downloads/ij-batch-threshold.ijm","docs":"https://example.com/docs/ij-batch"},
+  {"id":"ij-channel-split","title":"ImageJ 多通道分离插件","category":"ImageJ 插件","tags":["ImageJ","Channel"],"desc":"支持czi/lif多通道分离与命名。","free":false,"link":"#","docs":"https://example.com/docs/ij-split"},
+  {"id":"csv-cleaner","title":"CSV 清洗脚本","category":"数据处理脚本","tags":["Python","CSV"],"desc":"缺失值处理、列重命名与基本统计输出。","free":true,"link":"../assets/downloads/csv-cleaner.py"}
+]
+
+

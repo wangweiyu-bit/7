@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>付费下载 · 老王研究所</title>
+  <link rel="stylesheet" href="../assets/css/style.css" />
+  <script defer src="../assets/js/main.js"></script>
+</head>
+<body>
+  <div id="header"></div>
+  <main class="container">
+    <section>
+      <h2 class="section-title">付费资源</h2>
+      <div id="list" class="grid"></div>
+    </section>
+  </main>
+  <div id="footer"></div>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const items = await LW.fetchJSON('../data/paid.json').catch(()=>[]);
+      const root = document.getElementById('list');
+      function render(){
+        root.innerHTML = items.map(x => `
+          <div class=\"col-4\"><div class=\"card\"><div class=\"card-body\">
+            <div class=\"row\"><strong>${x.title}</strong><span class=\"tag\">${x.price}</span></div>
+            <p class=\"card-desc\">${x.desc}</p>
+            <div class=\"card-actions\">
+              <button class=\"btn primary\" onclick=\"payItem('${x.id}')\">微信/支付宝</button>
+              ${x.docs?`<a class=\\\"btn\\\" href=\\\"${x.docs}\\\" target=\\\"_blank\\\">详情</a>`:''}
+            </div>
+          </div></div></div>`).join('');
+      }
+      window.payItem = function(id){
+        alert('支付占位：请联系站长或扫码支付。完成后将在会员中心开通对应下载权限。资源ID: '+id);
+      }
+      render();
+    });
+  </script>
+</body>
+</html>
+
+

@@ -1,0 +1,6 @@
+[
+  {"id":"plot-basics","title":"科研绘图基础","level":"基础","type":"图文","tags":["绘图","期刊"],"desc":"从0到1制作规范图板。","link":"https://example.com/plot-basics"},
+  {"id":"imagej-advanced","title":"ImageJ 高级图像分析","level":"进阶","type":"视频","tags":["ImageJ","宏"],"desc":"复杂批处理与宏优化技巧。","membership":"premium","link":"https://example.com/imagej-advanced"}
+]
+
+

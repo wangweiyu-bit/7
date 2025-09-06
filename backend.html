@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>后端管理面板</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #4facfe;
+        }
+        
+        .section h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+        
+        .api-list {
+            display: grid;
+            gap: 15px;
+        }
+        
+        .api-item {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+            transition: all 0.3s ease;
+        }
+        
+        .api-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .method {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        
+        .get { background: #d4edda; color: #155724; }
+        .post { background: #cce5ff; color: #004085; }
+        .put { background: #fff3cd; color: #856404; }
+        .delete { background: #f8d7da; color: #721c24; }
+        
+        .endpoint {
+            font-family: 'Courier New', monospace;
+            font-size: 1.1em;
+            color: #495057;
+        }
+        
+        .description {
+            margin-top: 8px;
+            color: #6c757d;
+            font-size: 0.9em;
+        }
+        
+        .test-area {
+            background: #e3f2fd;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        
+        .test-area h3 {
+            color: #1976d2;
+            margin-bottom: 15px;
+        }
+        
+        .test-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .test-btn {
+            padding: 10px 20px;
+            background: #2196f3;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .test-btn:hover {
+            background: #1976d2;
+        }
+        
+        .response {
+            margin-top: 15px;
+            padding: 15px;
+            background: #f5f5f5;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            max-height: 300px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+        
+        .status {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.8em;
+            margin-left: 10px;
+        }
+        
+        .online { background: #d4edda; color: #155724; }
+        .offline { background: #f8d7da; color: #721c24; }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .feature-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #e9ecef;
+            text-align: center;
+        }
+        
+        .feature-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+        
+        .feature-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .feature-desc {
+            color: #6c757d;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 后端管理面板</h1>
+            <p>Node.js + Express + SQLite 后端服务</p>
+            <div id="status" class="status offline">离线</div>
+        </div>
+        
+        <div class="content">
+            <!-- 快速启动 -->
+            <div class="section">
+                <h2>🚀 快速启动后端</h2>
+                <div style="background: #e8f5e8; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+                    <h3 style="color: #2e7d32; margin-bottom: 15px;">📋 启动步骤</h3>
+                    <ol style="color: #333; line-height: 1.6;">
+                        <li><strong>安装 Node.js</strong> - 从 <a href="https://nodejs.org" target="_blank">nodejs.org</a> 下载安装</li>
+                        <li><strong>安装依赖</strong> - 在 backend 目录运行: <code>npm install</code></li>
+                        <li><strong>启动服务</strong> - 运行: <code>node src/server.js</code></li>
+                        <li><strong>测试连接</strong> - 点击下面的"检查服务状态"按钮</li>
+                    </ol>
+                </div>
+                
+                <div style="background: #fff3cd; padding: 15px; border-radius: 8px; border-left: 4px solid #ffc107;">
+                    <strong>💡 提示:</strong> 如果后端未运行，所有测试按钮都会显示错误信息。请先按照上述步骤启动后端服务。
+                </div>
+            </div>
+            
+            <!-- 系统状态 -->
+            <div class="section">
+                <h2>📊 系统状态</h2>
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">🗄️</div>
+                        <div class="feature-title">数据库</div>
+                        <div class="feature-desc">SQLite 数据库<br>自动迁移和初始化</div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🔐</div>
+                        <div class="feature-title">身份验证</div>
+                        <div class="feature-desc">JWT Token<br>微信 OAuth 登录</div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📁</div>
+                        <div class="feature-title">文件上传</div>
+                        <div class="feature-desc">Multer 中间件<br>本地存储</div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">💬</div>
+                        <div class="feature-title">匿名互动</div>
+                        <div class="feature-desc">帖子、评论、点赞<br>分页和搜索</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 认证相关 API -->
+            <div class="section">
+                <h2>🔐 认证相关 API</h2>
+                <div class="api-list">
+                    <div class="api-item">
+                        <span class="method post">POST</span>
+                        <span class="endpoint">/api/auth/register</span>
+                        <div class="description">用户注册（需要管理员审核）</div>
+                    </div>
+                    <div class="api-item">
+                        <span class="method post">POST</span>
+                        <span class="endpoint">/api/auth/login</span>
+                        <div class="description">用户登录（邮箱/密码）</div>
+                    </div>
+                    <div class="api-item">
+                        <span class="method get">GET</span>
+                        <span class="endpoint">/api/auth/me</span>
+                        <div class="description">获取当前用户信息</div>
+                    </div>
+                    <div class="api-item">
+                        <span class="method get">GET</span>
+                        <span class="endpoint">/api/auth/wechat/start</span>
+                        <div class="description">微信 OAuth 登录开始</div>
+                    </div>
+                    <div class="api-item">
+                        <span class="method get">GET</span>
+                        <span class="endpoint">/api/auth/wechat/callback</span>
+                        <div class="description">微信 OAuth 回调处理</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 管理员 API -->
+            <div class="section">
+                <h2>👑 管理员 API</h2>
+                <div class="api-list">
+                    <div class="api-item">
+                        <span class="method get">GET</span>
+                        <span class="endpoint">/api/admin/users</span>
+                        <div class="description">获取用户列表（支持筛选）</div>
+                    </div>
+                    <div class="api-item">
+                        <span class="method post">POST</span>
+                        <span class="endpoint">/api/admin/users/:id/approve</span>
+                        <div class="description">审核通过用户</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 匿名互动 API -->
+            <div class="section">
+                <h2>💬 匿名互动 API</h2>
+                <div class="api-list">
+                    <div class="api-item">
+                        <span class="method get">GET</span>
+                        <span class="endpoint">/api/anon/posts</span>
+                        <div class="description">获取匿名帖子列表（分页、搜索）</div>
+                    </div>
+                    <div class="api-item">
+                        <span class="method post">POST</span>
+                        <span class="endpoint">/api/anon/posts</span>
+                        <div class="description">发布匿名帖子</div>
+                    </div>
+                    <div class="api-item">
+                        <span class="method post">POST</span>
+                        <span class="endpoint">/api/anon/posts/:id/like</span>
+                        <div class="description">点赞帖子</div>
+                    </div>
+                    <div class="api-item">
+                        <span class="method get">GET</span>
+                        <span class="endpoint">/api/anon/posts/:id/comments</span>
+                        <div class="description">获取帖子评论</div>
+                    </div>
+                    <div class="api-item">
+                        <span class="method post">POST</span>
+                        <span class="endpoint">/api/anon/posts/:id/comments</span>
+                        <div class="description">添加评论</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 文件上传 API -->
+            <div class="section">
+                <h2>📁 文件上传 API</h2>
+                <div class="api-list">
+                    <div class="api-item">
+                        <span class="method post">POST</span>
+                        <span class="endpoint">/api/upload</span>
+                        <div class="description">上传文件（支持多文件，最大4个）</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 预约系统 API -->
+            <div class="section">
+                <h2>📅 预约系统 API</h2>
+                <div class="api-list">
+                    <div class="api-item">
+                        <span class="method get">GET</span>
+                        <span class="endpoint">/api/bookings</span>
+                        <div class="description">获取用户预约记录</div>
+                    </div>
+                    <div class="api-item">
+                        <span class="method post">POST</span>
+                        <span class="endpoint">/api/bookings</span>
+                        <div class="description">创建预约（book/queue/cancel/checkin）</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- API 测试区域 -->
+            <div class="section">
+                <h2>🧪 API 测试</h2>
+                <div class="test-area">
+                    <h3>基础功能测试</h3>
+                    <div class="test-buttons">
+                        <button class="test-btn" onclick="testHealth()">检查服务状态</button>
+                        <button class="test-btn" onclick="testAnonPosts()">获取匿名帖子</button>
+                        <button class="test-btn" onclick="testCreatePost()">创建测试帖子</button>
+                        <button class="test-btn" onclick="testRegister()">测试用户注册</button>
+                    </div>
+                    
+                    <h3>高级功能测试</h3>
+                    <div class="test-buttons">
+                        <button class="test-btn" onclick="testAdminUsers()">管理员用户列表</button>
+                        <button class="test-btn" onclick="testBookings()">预约系统</button>
+                        <button class="test-btn" onclick="testUpload()">文件上传检查</button>
+                    </div>
+                    
+                    <div id="response" class="response" style="display: none;"></div>
+                </div>
+            </div>
+            
+            <!-- 前端页面对应 -->
+            <div class="section">
+                <h2>🌐 前端页面对应</h2>
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">🏠</div>
+                        <div class="feature-title">首页</div>
+                        <div class="feature-desc">index.html<br>公开访问</div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">👤</div>
+                        <div class="feature-title">会员中心</div>
+                        <div class="feature-desc">pages/members.html<br>需要登录 + 审核</div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🎮</div>
+                        <div class="feature-title">娱乐区</div>
+                        <div class="feature-desc">pages/fun.html<br>匿名互动功能</div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">ℹ️</div>
+                        <div class="feature-title">关于我</div>
+                        <div class="feature-desc">pages/about.html<br>个人介绍页面</div>
+                    </div>
+                </div>
+                
+                <div style="background: #f0f8ff; padding: 20px; border-radius: 8px; margin-top: 20px;">
+                    <h3 style="color: #1976d2; margin-bottom: 15px;">🔗 功能对应关系</h3>
+                    <ul style="color: #333; line-height: 1.8;">
+                        <li><strong>会员预约</strong> → <code>/api/bookings</code> (POST/GET)</li>
+                        <li><strong>匿名发帖</strong> → <code>/api/anon/posts</code> (POST/GET)</li>
+                        <li><strong>匿名评论</strong> → <code>/api/anon/posts/:id/comments</code> (POST/GET)</li>
+                        <li><strong>匿名点赞</strong> → <code>/api/anon/posts/:id/like</code> (POST)</li>
+                        <li><strong>文件上传</strong> → <code>/api/upload</code> (POST)</li>
+                        <li><strong>用户登录</strong> → <code>/api/auth/login</code> (POST)</li>
+                        <li><strong>微信登录</strong> → <code>/api/auth/wechat/start</code> (GET)</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- 数据库表结构 -->
+            <div class="section">
+                <h2>🗄️ 数据库表结构</h2>
+                <div class="api-list">
+                    <div class="api-item">
+                        <strong>users</strong> - 用户表
+                        <div class="description">id, email, password, name, role, approved, wechat_openid, session_version, active_device_id, created_at</div>
+                    </div>
+                    <div class="api-item">
+                        <strong>oauth_states</strong> - OAuth 状态表
+                        <div class="description">state, created_at</div>
+                    </div>
+                    <div class="api-item">
+                        <strong>bookings</strong> - 预约表
+                        <div class="description">id, user_id, date, slot_id, name, phone, action, status, created_at</div>
+                    </div>
+                    <div class="api-item">
+                        <strong>anon_posts</strong> - 匿名帖子表
+                        <div class="description">id, board, device_id, title, content, tags, media, likes_count, comments_count, status, created_at</div>
+                    </div>
+                    <div class="api-item">
+                        <strong>anon_comments</strong> - 匿名评论表
+                        <div class="description">id, post_id, device_id, content, created_at</div>
+                    </div>
+                    <div class="api-item">
+                        <strong>anon_likes</strong> - 匿名点赞表
+                        <div class="description">id, post_id, device_id, created_at</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 检查后端服务状态
+        async function checkStatus() {
+            try {
+                const response = await fetch('http://localhost:8080/api/health');
+                if (response.ok) {
+                    document.getElementById('status').textContent = '在线';
+                    document.getElementById('status').className = 'status online';
+                } else {
+                    throw new Error('服务异常');
+                }
+            } catch (error) {
+                document.getElementById('status').textContent = '离线';
+                document.getElementById('status').className = 'status offline';
+            }
+        }
+        
+        // 测试健康检查
+        async function testHealth() {
+            const responseDiv = document.getElementById('response');
+            responseDiv.style.display = 'block';
+            responseDiv.textContent = '正在检查后端服务...';
+            
+            try {
+                const response = await fetch('http://localhost:8080/api/health');
+                if (response.ok) {
+                    const data = await response.json();
+                    responseDiv.textContent = `✅ 后端服务正常运行\n状态码: ${response.status}\n响应: ${JSON.stringify(data, null, 2)}`;
+                    document.getElementById('status').textContent = '在线';
+                    document.getElementById('status').className = 'status online';
+                } else {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+            } catch (error) {
+                responseDiv.textContent = `❌ 后端服务未运行\n错误: ${error.message}\n\n请先启动后端服务:\n1. 安装 Node.js\n2. 在 backend 目录运行: npm install\n3. 运行: node src/server.js`;
+                document.getElementById('status').textContent = '离线';
+                document.getElementById('status').className = 'status offline';
+            }
+        }
+        
+        // 测试匿名帖子
+        async function testAnonPosts() {
+            const responseDiv = document.getElementById('response');
+            responseDiv.style.display = 'block';
+            responseDiv.textContent = '正在获取匿名帖子列表...';
+            
+            try {
+                const response = await fetch('http://localhost:8080/api/anon/posts?board=dating&page=1&pageSize=5');
+                const data = await response.json();
+                
+                if (response.ok) {
+                    responseDiv.textContent = `✅ 匿名帖子API正常\n状态码: ${response.status}\n\n帖子数量: ${data.posts ? data.posts.length : 0}\n总页数: ${data.totalPages || 0}\n\n响应数据:\n${JSON.stringify(data, null, 2)}`;
+                } else {
+                    responseDiv.textContent = `❌ API调用失败\n状态码: ${response.status}\n错误: ${data.message || '未知错误'}`;
+                }
+            } catch (error) {
+                responseDiv.textContent = `❌ 网络错误\n错误: ${error.message}\n\n请确保后端服务正在运行`;
+            }
+        }
+        
+        // 测试创建匿名帖子
+        async function testCreatePost() {
+            const responseDiv = document.getElementById('response');
+            responseDiv.style.display = 'block';
+            responseDiv.textContent = '正在创建测试帖子...';
+            
+            try {
+                const testPost = {
+                    board: 'dating',
+                    title: '测试帖子 - ' + new Date().toLocaleString(),
+                    content: '这是一个通过后端管理面板创建的测试帖子',
+                    tags: '测试,后端,管理面板'
+                };
+                
+                const response = await fetch('http://localhost:8080/api/anon/posts', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Device-Id': 'test-device-' + Date.now()
+                    },
+                    body: JSON.stringify(testPost)
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    responseDiv.textContent = `✅ 帖子创建成功\n状态码: ${response.status}\n\n帖子ID: ${data.id}\n标题: ${data.title}\n\n响应数据:\n${JSON.stringify(data, null, 2)}`;
+                } else {
+                    responseDiv.textContent = `❌ 帖子创建失败\n状态码: ${response.status}\n错误: ${data.message || '未知错误'}`;
+                }
+            } catch (error) {
+                responseDiv.textContent = `❌ 网络错误\n错误: ${error.message}`;
+            }
+        }
+        
+        // 测试用户注册
+        async function testRegister() {
+            const responseDiv = document.getElementById('response');
+            responseDiv.style.display = 'block';
+            responseDiv.textContent = '正在测试用户注册...';
+            
+            try {
+                const testUser = {
+                    email: 'test@example.com',
+                    password: 'test123456',
+                    name: '测试用户'
+                };
+                
+                const response = await fetch('http://localhost:8080/api/auth/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(testUser)
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    responseDiv.textContent = `✅ 用户注册成功\n状态码: ${response.status}\n\n用户ID: ${data.user.id}\n邮箱: ${data.user.email}\n审核状态: ${data.user.approved ? '已审核' : '待审核'}\n\n响应数据:\n${JSON.stringify(data, null, 2)}`;
+                } else {
+                    responseDiv.textContent = `❌ 用户注册失败\n状态码: ${response.status}\n错误: ${data.message || '未知错误'}`;
+                }
+            } catch (error) {
+                responseDiv.textContent = `❌ 网络错误\n错误: ${error.message}`;
+            }
+        }
+        
+        // 测试文件上传
+        async function testUpload() {
+            const responseDiv = document.getElementById('response');
+            responseDiv.style.display = 'block';
+            responseDiv.textContent = '文件上传测试需要实际文件，请使用前端页面测试\n\n或者可以检查上传目录是否存在...';
+            
+            try {
+                // 检查上传目录是否存在
+                const response = await fetch('http://localhost:8080/api/health');
+                if (response.ok) {
+                    responseDiv.textContent += `\n\n✅ 后端服务正常，文件上传功能应该可用\n上传路径: backend/uploads/`;
+                }
+            } catch (error) {
+                responseDiv.textContent += `\n\n❌ 后端服务未运行`;
+            }
+        }
+        
+        // 测试管理员功能
+        async function testAdminUsers() {
+            const responseDiv = document.getElementById('response');
+            responseDiv.style.display = 'block';
+            responseDiv.textContent = '正在获取用户列表...';
+            
+            try {
+                const response = await fetch('http://localhost:8080/api/admin/users');
+                const data = await response.json();
+                
+                if (response.ok) {
+                    responseDiv.textContent = `✅ 管理员API正常\n状态码: ${response.status}\n\n用户数量: ${data.users ? data.users.length : 0}\n\n响应数据:\n${JSON.stringify(data, null, 2)}`;
+                } else {
+                    responseDiv.textContent = `❌ 管理员API调用失败\n状态码: ${response.status}\n错误: ${data.message || '未知错误'}\n\n注意: 需要管理员权限`;
+                }
+            } catch (error) {
+                responseDiv.textContent = `❌ 网络错误\n错误: ${error.message}`;
+            }
+        }
+        
+        // 测试预约系统
+        async function testBookings() {
+            const responseDiv = document.getElementById('response');
+            responseDiv.style.display = 'block';
+            responseDiv.textContent = '正在测试预约系统...';
+            
+            try {
+                const response = await fetch('http://localhost:8080/api/bookings');
+                const data = await response.json();
+                
+                if (response.ok) {
+                    responseDiv.textContent = `✅ 预约系统API正常\n状态码: ${response.status}\n\n预约数量: ${data.bookings ? data.bookings.length : 0}\n\n响应数据:\n${JSON.stringify(data, null, 2)}`;
+                } else {
+                    responseDiv.textContent = `❌ 预约系统API调用失败\n状态码: ${response.status}\n错误: ${data.message || '未知错误'}\n\n注意: 需要登录权限`;
+                }
+            } catch (error) {
+                responseDiv.textContent = `❌ 网络错误\n错误: ${error.message}`;
+            }
+        }
+        
+        // 页面加载时检查状态
+        window.onload = function() {
+            checkStatus();
+            // 每30秒检查一次状态
+            setInterval(checkStatus, 30000);
+        };
+    </script>
+</body>
+</html>

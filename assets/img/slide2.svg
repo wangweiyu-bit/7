@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="520" viewBox="0 0 1200 520">
+  <defs>
+    <linearGradient id="g2" x1="1" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#22c55e"/>
+      <stop offset="100%" stop-color="#6fe3ff"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="520" fill="#0e1420"/>
+  <rect width="1200" height="520" fill="url(#g2)" opacity="0.25"/>
+  <text x="50%" y="50%" text-anchor="middle" fill="#e6e9ef" font-family="Segoe UI, Arial" font-size="48">教程中心</text>
+  <text x="50%" y="60%" text-anchor="middle" fill="#8a93a6" font-family="Segoe UI, Arial" font-size="18">图文教程 · 视频教程 · 基础与进阶</text>
+</svg>
+
+

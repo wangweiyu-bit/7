@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>会员专区 · 老王研究所</title>
+  <link rel="stylesheet" href="../assets/css/style.css" />
+  <script defer src="../assets/js/main.js"></script>
+</head>
+<body>
+  <div id="header"></div>
+  <main class="container">
+    <section>
+      <h2 class="section-title">会员权益</h2>
+      <div class="grid">
+        <div class="col-6"><div class="card"><div class="card-body">
+          <h3 class="card-title">普通会员</h3>
+          <p class="card-desc">可访问部分教程与资源包，参与讨论区。</p>
+        </div></div></div>
+        <div class="col-6"><div class="card"><div class="card-body">
+          <h3 class="card-title">高级会员</h3>
+          <p class="card-desc">可访问高阶教程、专属答疑、付费资源下载权限。</p>
+        </div></div></div>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="section-title">登录/注册</h2>
+      <div class="card"><div class="card-body">
+        <div class="row">
+          <button class="btn" onclick="document.getElementById('member-action').click()">登录/注册</button>
+          <button class="btn warn" onclick="LW.setMember({name:'测试用户',role:'premium',time:Date.now()});alert('已模拟开通高级会员')">一键体验高级会员</button>
+        </div>
+      </div></div>
+    </section>
+
+    <section>
+      <h2 class="section-title">资源包下载</h2>
+      <div id="packs" class="grid"></div>
+    </section>
+  </main>
+  <div id="footer"></div>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const packs = await LW.fetchJSON('../data/packs.json').catch(()=>[]);
+      const root = document.getElementById('packs');
+      function render(){
+        const m = LW.getMember();
+        root.innerHTML = packs.map(p => `
+          <div class=\"col-4\"><div class=\"card\"><div class=\"card-body\">
+            <div class=\"row\"><strong>${p.title}</strong><span class=\"tag\">${p.level}</span></div>
+            <p class=\"card-desc\">${p.desc}</p>
+            <div class=\"card-actions\">
+              ${p.level==='高级会员' ? (m && m.role==='premium' ? `<a class=\\\"btn\\\" href=\\\"${p.link}\\\" download>下载</a>` : `<button class=\\\"btn primary\\\" onclick=\\\"alert('需要高级会员权限')\\\">仅限高级会员</button>`) : `<a class=\\\"btn\\\" href=\\\"${p.link}\\\" download>下载</a>`}
+            </div>
+          </div></div></div>`).join('');
+      }
+      render();
+    });
+  </script>
+
+  <!-- 会员咨询 / 上课预约 -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const container = document.querySelector('main.container');
+      const section = document.createElement('section');
+      section.innerHTML = `
+        <h2 class="section-title">会员咨询 / 上课预约</h2>
+        <div class="card"><div class="card-body">
+          <div class="row" style="flex-wrap:wrap;gap:10px">
+            <label>选择日期</label>
+            <input type="date" id="class-date" />
+            <span class="muted">上课时间：每天 20:00 - 23:00（45 分钟上课 + 15 分钟休息）</span>
+          </div>
+          <div class="space"></div>
+          <div id="slots" class="grid"></div>
+          <div class="space"></div>
+          <div id="daily-summary" class="grid"></div>
+        </div></div>
+      `;
+      container.appendChild(section);
+
+      const dateEl = section.querySelector('#class-date');
+      dateEl.valueAsDate = new Date();
+
+      const SLOT_STARTS = ['20:00','21:00','22:00'];
+      const SLOT_DURATION_MIN = 45;
+
+      const storageKey = (date)=> `booking:schedule:${date}`;
+      function getDateStr(){
+        const d = new Date(dateEl.value || Date.now());
+        const y = d.getFullYear();
+        const m = String(d.getMonth()+1).padStart(2,'0');
+        const dd = String(d.getDate()).padStart(2,'0');
+        return `${y}-${m}-${dd}`;
+      }
+
+      function buildDefaultSchedule(dateStr){
+        const slots = SLOT_STARTS.map((t,idx)=>{
+          const [hh,mm] = t.split(':').map(Number);
+          const start = `${t}`;
+          const endDate = new Date(`${dateStr}T${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}:00`);
+          endDate.setMinutes(endDate.getMinutes() + SLOT_DURATION_MIN);
+          const end = `${String(endDate.getHours()).padStart(2,'0')}:${String(endDate.getMinutes()).padStart(2,'0')}`;
+          return { id: `S${idx+1}`, start, end, capacity: 3, bookings: [], waitlist: [], checkins: [] };
+        });
+        return { date: dateStr, slots };
+      }
+
+      function loadSchedule(dateStr){
+        try{ const s = JSON.parse(localStorage.getItem(storageKey(dateStr))||'null'); return s || buildDefaultSchedule(dateStr); }
+        catch{ return buildDefaultSchedule(dateStr); }
+      }
+      function saveSchedule(dateStr, schedule){ localStorage.setItem(storageKey(dateStr), JSON.stringify(schedule)); }
+
+      function getStudentId(){
+        const m = LW.getMember();
+        return (m && (m.name || m.email)) ? (m.name || m.email) : null;
+      }
+      function waitlistHas(name, list){ return (list||[]).some(w => typeof w === 'string' ? w===name : (w && w.name===name)); }
+      function waitlistRemove(name, list){ const i=(list||[]).findIndex(w=> typeof w==='string'? w===name : (w && w.name===name)); if(i>=0) list.splice(i,1); return i>=0; }
+
+      function render(){
+        const dateStr = getDateStr();
+        const sched = loadSchedule(dateStr);
+        const slotsRoot = section.querySelector('#slots');
+        slotsRoot.innerHTML = sched.slots.map(slot=>{
+          const booked = slot.bookings.length;
+          const left = Math.max(0, slot.capacity - booked);
+          const me = getStudentId();
+          const isBooked = me && slot.bookings.includes(me);
+          const isWait = me && waitlistHas(me, slot.waitlist);
+          return `
+            <div class=\"col-4\"><div class=\"card\"><div class=\"card-body\">
+              <div class=\"row\"><strong>${slot.start} - ${slot.end}</strong><span class=\"tag\">容量 ${slot.capacity}</span></div>
+              <p class=\"card-desc\">已预约 ${booked} 人 · 剩余 ${left} 人 · 排队 ${slot.waitlist.length}</p>
+              <div class=\"row\" style=\"gap:8px;flex-wrap:wrap\">
+                ${!me ? `<button class=\\\"btn\\\" onclick=\\\"alert('请先登录会员')\\\">预约</button>` :
+                  (isBooked ? `<button class=\\\"btn\\\" data-act=\\\"cancel\\\" data-id=\\\"${slot.id}\\\">取消预约</button><button class=\\\"btn success\\\" data-act=\\\"checkin\\\" data-id=\\\"${slot.id}\\\">签到</button>` :
+                  (isWait ? `<span class=\\\"muted\\\">已在排队</span><button class=\\\"btn\\\" data-act=\\\"cancelWait\\\" data-id=\\\"${slot.id}\\\">退出排队</button>` :
+                  (left>0 ? `<button class=\\\"btn\\\" data-act=\\\"book\\\" data-id=\\\"${slot.id}\\\">预约</button>` : `<button class=\\\"btn\\\" data-act=\\\"queue\\\" data-id=\\\"${slot.id}\\\">排队</button>`)))}
+                <span class=\"muted\" id=\"res-${slot.id}\"></span>
+              </div>
+              <div class=\"space\"></div>
+              <div class=\"row\" style=\"gap:6px\">
+                <label>容量</label>
+                <input type=\"number\" min=\"1\" value=\"${slot.capacity}\" data-cap=\"${slot.id}\" style=\"max-width:90px\" />
+                <button class=\"btn\" data-act=\"saveCap\" data-id=\"${slot.id}\">保存</button>
+              </div>
+            </div></div></div>`;
+        }).join('');
+
+        const summary = section.querySelector('#daily-summary');
+        summary.innerHTML = `<div class=\"col-12\"><div class=\"card\"><div class=\"card-body\"><strong>今日预约情况（${sched.date}）</strong>
+          <ul class=\"muted\">${sched.slots.map(s=>`<li>${s.start}-${s.end}：已预约 ${s.bookings.length}，排队 ${s.waitlist.length}</li>`).join('')}</ul>
+        </div></div></div>`;
+
+        // wire actions
+        slotsRoot.querySelectorAll('[data-act]')?.forEach(btn=>{
+          btn.addEventListener('click', ()=>{
+            const act = btn.getAttribute('data-act');
+            const id = btn.getAttribute('data-id');
+            if(act==='book') return onBook(id);
+            if(act==='cancel') return onCancel(id);
+            if(act==='cancelWait') return onCancelWait(id);
+            if(act==='checkin') return onCheckIn(id);
+            if(act==='saveCap') return onSaveCap(id);
+            if(act==='queue') return onQueue(id);
+          });
+        });
+
+        slotsRoot.querySelectorAll('[data-cap]')?.forEach(inp=>{
+          inp.addEventListener('change', ()=> inp.setAttribute('data-dirty','1'));
+        });
+      }
+
+      function onSaveCap(slotId){
+        const dateStr = getDateStr(); const sched = loadSchedule(dateStr);
+        const slot = sched.slots.find(s=>s.id===slotId); if(!slot) return;
+        const inp = document.querySelector(`[data-cap="${slotId}"]`);
+        const v = Math.max(1, parseInt(inp.value||'1',10));
+        slot.capacity = v; saveSchedule(dateStr, sched);
+        render(); alert('容量已保存');
+      }
+
+      function makeResNo(){ return 'R' + Date.now().toString().slice(-6) + Math.floor(Math.random()*90+10); }
+
+      function onBook(slotId){
+        const me = getStudentId(); if(!me){ alert('请先登录会员'); return; }
+        const dateStr = getDateStr(); const sched = loadSchedule(dateStr);
+        const slot = sched.slots.find(s=>s.id===slotId); if(!slot) return;
+        if(slot.bookings.includes(me) || slot.waitlist.includes(me)){ alert('你已经预约或在排队'); return; }
+        const name = prompt('请输入你的姓名（用于上课记录）', me) || me;
+        const phone = prompt('请输入手机号（用于联系提醒）', '') || '';
+        if(!/^\d{6,}$/.test(phone)){ alert('请输入有效手机号（至少6位数字）'); return; }
+        const left = slot.capacity - slot.bookings.length;
+        let msg = '';
+        if(left>0){
+          slot.bookings.push(me);
+          msg = `预约成功 · 预约号 ${makeResNo()}`;
+        }else{
+          slot.waitlist.push(me);
+          msg = '已加入排队';
+        }
+        saveSchedule(dateStr, sched);
+        render();
+        const resEl = document.getElementById(`res-${slotId}`);
+        if(resEl){ resEl.textContent = msg; } else { alert(msg); }
+        // send to backend（mock 模式下为 no-op）
+        LW.api.post('/api/bookings', { date: dateStr, slotId, name, phone, action: left>0 ? 'book' : 'queue' }).catch(()=>{});
+      }
+
+      function onCancel(slotId){
+        const me = getStudentId(); if(!me) return;
+        const dateStr = getDateStr(); const sched = loadSchedule(dateStr);
+        const slot = sched.slots.find(s=>s.id===slotId); if(!slot) return;
+        const i = slot.bookings.indexOf(me);
+        if(i>=0){ slot.bookings.splice(i,1);
+          // promote first waitlist
+          const promoted = slot.waitlist.shift(); if(promoted){ const name = typeof promoted==='string'? promoted : promoted.name; if(name){ slot.bookings.push(name); alert(`已为排队同学自动补位：${name}`); } }
+          saveSchedule(dateStr, sched); render();
+          LW.api.post('/api/bookings', { date: dateStr, slotId, action: 'cancel' }).catch(()=>{});
+        }
+      }
+
+      function onCancelWait(slotId){
+        const me = getStudentId(); if(!me) return;
+        const dateStr = getDateStr(); const sched = loadSchedule(dateStr);
+        const slot = sched.slots.find(s=>s.id===slotId); if(!slot) return;
+        if(waitlistRemove(me, slot.waitlist)){
+          saveSchedule(dateStr, sched); render();
+          LW.api.post('/api/bookings', { date: dateStr, slotId, action: 'cancel' }).catch(()=>{});
+        }
+      }
+
+      function onCheckIn(slotId){
+        const me = getStudentId(); if(!me) return;
+        const dateStr = getDateStr(); const sched = loadSchedule(dateStr);
+        const slot = sched.slots.find(s=>s.id===slotId); if(!slot) return;
+        if(!slot.bookings.includes(me)){ alert('仅已预约的同学可签到'); return; }
+        if(!slot.checkins.includes(me)) slot.checkins.push(me);
+        saveSchedule(dateStr, sched); alert('签到成功'); render();
+        LW.api.post('/api/bookings', { date: dateStr, slotId, action: 'checkin' }).catch(()=>{});
+      }
+
+      function onQueue(slotId){
+        const me = getStudentId(); if(!me){ alert('请先登录会员'); return; }
+        const name = prompt('请输入你的姓名（用于排队通知）', me) || me;
+        let phone = prompt('请输入手机号（仅用于排队通知）', '');
+        if(!phone || !/^\d{6,}$/.test(phone)){ alert('请输入有效手机号（至少6位数字）'); return; }
+        const dateStr = getDateStr(); const sched = loadSchedule(dateStr);
+        const slot = sched.slots.find(s=>s.id===slotId); if(!slot) return;
+        if(waitlistHas(name, slot.waitlist)){ alert('你已在排队'); return; }
+        slot.waitlist.push({ name, phone });
+        saveSchedule(dateStr, sched);
+        render();
+        const resEl = document.getElementById(`res-${slotId}`);
+        const msg = '已加入排队（将通过站内提示通知）';
+        if(resEl){ resEl.textContent = msg; } else { alert(msg); }
+        LW.api.post('/api/bookings', { date: dateStr, slotId, name, phone, action: 'queue' }).catch(()=>{});
+      }
+
+      dateEl.addEventListener('change', render);
+      render();
+    });
+  </script>
+</body>
+</html>
+
+

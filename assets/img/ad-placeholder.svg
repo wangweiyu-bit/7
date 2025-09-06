@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="200" viewBox="0 0 1100 200">
+  <defs>
+    <linearGradient id="ga" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#47a3ff"/>
+      <stop offset="100%" stop-color="#6fe3ff"/>
+    </linearGradient>
+  </defs>
+  <rect width="1100" height="200" fill="#ffffff"/>
+  <rect width="1100" height="200" fill="url(#ga)" opacity="0.12"/>
+  <rect x="20" y="20" width="160" height="160" rx="14" fill="#f3f4f6" stroke="#e5e7eb"/>
+  <text x="210" y="88" fill="#111827" font-family="Segoe UI, Arial" font-size="28">商务合作 / 广告位</text>
+  <text x="210" y="122" fill="#64748b" font-family="Segoe UI, Arial" font-size="16">支持科研相关投放（工具/课程/会议/器材）</text>
+  <text x="210" y="148" fill="#64748b" font-family="Segoe UI, Arial" font-size="14">联系：contact@example.com</text>
+</svg>
+
+

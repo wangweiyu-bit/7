@@ -1,0 +1,618 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>小互动 · 老王研究所</title>
+  <link rel="stylesheet" href="../assets/css/style.css" />
+  <script defer src="../assets/js/main.js"></script>
+</head>
+<body>
+  <div id="header"></div>
+  <main class="container">
+    <section>
+      <h2 class="section-title">小互动 · Fun Zone <span class="cat-ears"></span></h2>
+      <p class="muted">一些轻松的小功能，缓解科研压力，提升专注与动力。</p>
+
+    </section>
+
+    
+
+    <section>
+      <div class="grid fun-grid">
+        <div class="col-4"><div class="card"><div class="card-body">
+          <div class="row"><strong>科研人祈祷</strong><span class="tag">放松心情</span></div>
+          <p class="card-desc">点我祈祷，祝你实验顺利、数据漂亮。<span class="whiskers"></span></p>
+          <div class="card-actions"><button class="btn primary" id="btn-prayer">开始祈祷 <span class="paw-print"></span></button></div>
+        </div></div></div>
+
+        <!-- 心情测试：移到第4位 -->
+        <div class="col-4"><div class="card"><div class="card-body">
+          <div class="row"><strong>科研心情测试</strong><span class="tag">轻松一刻</span></div>
+          <p class="card-desc">3个小问题，生成一条轻松评语。</p>
+          <div class="card-actions"><button class="btn" id="btn-mood">开始测试</button></div>
+        </div></div></div>
+
+        <div class="col-4"><div class="card"><div class="card-body">
+          <div class="row"><strong>敲木鱼</strong><span class="tag">正念一下</span></div>
+          <p class="card-desc">点击木鱼，送你一句科研鼓励。<span class="paw-print"></span></p>
+          <div class="card-actions"><button class="btn" id="btn-wooden">敲一下 <span class="paw-print"></span></button></div>
+        </div></div></div>
+
+        <div class="col-4"><div class="card"><img class="sticker-bg" src="../assets/img/water-sticker.png" alt="water sticker" onerror="this.style.display='none'"/><div class="card-body">
+          <div class="row"><strong>多喝水</strong><span class="tag">健康提醒</span></div>
+          <p class="card-desc">让水杯慢慢装满，保持活力。</p>
+          <div class="row">
+            <div class="water-cup" style="margin:8px 0">
+              <div class="water-fill" id="water-fill"></div>
+            </div>
+          </div>
+          <div class="card-actions"><button class="btn" id="btn-water">喝水打卡</button><button class="btn" id="btn-water-remind">设置提醒</button></div>
+        </div></div></div>
+
+        <div class="col-4"><div class="card compact"><img class="sticker-bg" src="../assets/img/calm-sticker.png" alt="calm sticker" onerror="this.style.display='none'"/><div class="card-body">
+          <div class="row"><strong>别生气</strong><span class="tag">舒缓一下</span></div>
+          <p class="card-desc">遇到困难点这里，给你一点安慰与能量。</p>
+          <div class="card-actions"><button class="btn" id="btn-calm">我有点上火</button></div>
+        </div></div></div>
+
+        <div class="col-4"><div class="card compact"><img class="sticker-bg" src="../assets/img/challenge-sticker.png" alt="challenge sticker" onerror="this.style.display='none'"/><div class="card-body">
+          <div class="row"><strong>每日挑战</strong><span class="tag">+1%</span></div>
+          <p class="card-desc">今天的小目标：完成一个可量化的小进步。</p>
+          <div class="progress"><span id="challenge-progress"></span></div>
+          <div class="card-actions"><button class="btn" id="btn-challenge">领取挑战</button><button class="btn" id="btn-challenge-done">我完成了</button></div>
+        </div></div></div>
+
+        <!-- 今日抽签：整行显示，填满空缺形成规整矩形 -->
+        <div class="col-12"><div class="card"><div class="card-body">
+          <div class="row"><strong>今日抽签</strong><span class="tag">正能量</span></div>
+          <p class="card-desc">抽一签今日的科研好运与指引（与实验相关的积极寄语）。</p>
+          <div class="row"><button class="btn" id="btn-fortune">抽一签 <span class="paw-print"></span></button><span id="fortune-text" class="muted"></span></div>
+        </div></div></div>
+      </div>
+
+      <section>
+        <h2 class="section-title">云养猫 · 小猫日常 <span class="cat-ears"></span> <small class="muted" style="font-weight:normal;margin-left:8px">来到世界：<span id="cat-age">计算中…</span></small></h2>
+        <p class="muted">看看两只猫猫的日常，点“撸一下”增加爱心；也可投喂支持猫粮、零食、玩具。</p>
+        <div class="grid">
+          <div class="col-4"><div class="card">
+            <img src="../assets/img/cat1.jpg" alt="今日猫猫1" onerror="this.onerror=null;this.src='../assets/img/slide1.svg'" style="width:100%;border-radius:12px;border:1px solid var(--border)" />
+            <div class="card-body">
+              <div class="row"><strong>今日打盹</strong><span class="tag">可爱</span></div>
+              <p class="card-desc">上传图片到 assets/img/cat1.jpg 替换占位图。</p>
+              <div class="row" style="align-items:center;gap:8px">
+                <button class="btn" id="btn-cat-like-1">撸一下 <span class="paw-print"></span></button>
+                <span class="muted">爱心 <span id="cat-like-1">0</span></span>
+              </div>
+            </div>
+          </div></div>
+          <div class="col-4"><div class="card">
+            <img src="../assets/img/cat2.jpg" alt="今日猫猫2" onerror="this.onerror=null;this.src='../assets/img/slide2.svg'" style="width:100%;border-radius:12px;border:1px solid var(--border)" />
+            <div class="card-body">
+              <div class="row"><strong>日常巡逻</strong><span class="tag">活泼</span></div>
+              <p class="card-desc">上传图片到 assets/img/cat2.jpg 替换占位图。</p>
+              <div class="row" style="align-items:center;gap:8px">
+                <button class="btn" id="btn-cat-like-2">撸一下 <span class="paw-print"></span></button>
+                <span class="muted">爱心 <span id="cat-like-2">0</span></span>
+              </div>
+            </div>
+          </div></div>
+          <div class="col-4"><div class="card">
+            <img src="../assets/img/cat3.jpg" alt="今日猫猫3" onerror="this.onerror=null;this.src='../assets/img/slide3.svg'" style="width:100%;border-radius:12px;border:1px solid var(--border)" />
+            <div class="card-body">
+              <div class="row"><strong>认真思考</strong><span class="tag">沉稳</span></div>
+              <p class="card-desc">上传图片到 assets/img/cat3.jpg 替换占位图。</p>
+              <div class="row" style="align-items:center;gap:8px">
+                <button class="btn" id="btn-cat-like-3">撸一下 <span class="paw-print"></span></button>
+                <span class="muted">爱心 <span id="cat-like-3">0</span></span>
+              </div>
+            </div>
+          </div></div>
+        </div>
+        <div class="space"></div>
+        <div class="row">
+          <button class="btn" data-feed="5">投喂小零食 ¥5</button>
+          <button class="btn" data-feed="10">投喂猫粮 ¥10</button>
+          <button class="btn" data-feed="20">投喂玩具 ¥20</button>
+        </div>
+        <div class="space"></div>
+        <div class="card"><div class="card-body">
+          <div class="row"><strong>投喂感谢墙</strong><span class="tag">谢谢喵</span></div>
+          <form id="feed-form" class="row" style="gap:8px;margin-top:8px">
+            <input id="feed-name" placeholder="你的称呼(可选)" style="max-width:200px" />
+            <input id="feed-msg" placeholder="留言(可选)" style="flex:1" />
+            <button class="btn" type="submit">提交</button>
+          </form>
+          <ul id="feed-list" class="muted" style="margin-top:8px;max-height:160px;overflow:auto;padding-right:6px"></ul>
+        </div></div>
+      </section>
+
+      <!-- 将今日抽签合入上方网格：新增第7张卡片 -->
+
+      <section>
+        <h2 class="section-title">科研互动区（匿名版）</h2>
+        <div class="card"><div class="card-body">
+          <div class="row" id="anon-tabs" style="flex-wrap:wrap;gap:8px">
+            <button class="btn" data-board="dating">相亲角</button>
+            <button class="btn" data-board="protocol">实验 Protocol</button>
+            <button class="btn" data-board="jobs">求职 & 招聘</button>
+            <button class="btn" data-board="rant">吐槽 & 分享</button>
+            <button class="btn" data-board="trade">二手回收</button>
+            <button class="btn" data-board="exchange">细胞/资源互换</button>
+          </div>
+          <div class="space"></div>
+          <form id="anon-form" class="grid" style="gap:12px">
+            <div class="col-6"><input id="anon-title" placeholder="标题（可选）" /></div>
+            <div class="col-6"><input id="anon-tags" placeholder="标签（逗号分隔，可选）" /></div>
+            <div class="col-12"><textarea id="anon-content" rows="4" placeholder="内容（支持纯文本，最多 5000 字）"></textarea></div>
+            <div class="col-12"><div class="row" style="gap:8px;flex-wrap:wrap"><input type="file" id="anon-files" multiple accept="image/*,application/pdf,application/zip,application/x-zip-compressed,.7z,.rar,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv" style="max-width:420px" /><button class="btn" id="anon-upload" type="button">上传附件</button><span class="muted">可选：最多 4 个文件</span></div></div>
+            <div class="col-12"><div class="row" style="gap:8px">
+              <button class="btn primary" type="submit">匿名发帖</button>
+              <input id="anon-q" placeholder="搜索关键词" style="max-width:220px" />
+              <button class="btn" id="anon-search" type="button">搜索</button>
+              <button class="btn" id="anon-today-match" type="button">今日缘分</button>
+            </div></div>
+          </form>
+          <div class="space"></div>
+          <div id="anon-list" class="grid" style="max-height:420px;overflow:auto;padding-right:6px"></div>
+          <div class="space"></div>
+          <div class="row" style="gap:8px;justify-content:flex-end"><button class="btn" id="anon-prev">上一页</button><span class="muted" id="anon-page-info"></span><button class="btn" id="anon-next">下一页</button></div>
+        </div></div>
+      </section>
+
+      <div class="modal" id="modal-generic">
+        <div class="content">
+          <div class="header"><strong id="modal-title">提示</strong><button class="close" id="modal-close">✕</button></div>
+          <div class="body" id="modal-body"></div>
+        </div>
+      </div>
+
+      <div class="toast" id="toast"></div>
+    </section>
+  </main>
+  <div id="footer"></div>
+
+  <script>
+    // Reuse the exact JS from index fun zone (already inlined there)
+    document.addEventListener('DOMContentLoaded', () => {
+      // --- 匿名互动区 ---
+      (function(){
+        const tabs = document.getElementById('anon-tabs');
+        if(!tabs) return;
+        const list = document.getElementById('anon-list');
+        const form = document.getElementById('anon-form');
+        const titleEl = document.getElementById('anon-title');
+        const tagsEl = document.getElementById('anon-tags');
+        const contentEl = document.getElementById('anon-content');
+        const qEl = document.getElementById('anon-q');
+        const btnSearch = document.getElementById('anon-search');
+        const btnMatch = document.getElementById('anon-today-match');
+        const btnPrev = document.getElementById('anon-prev');
+        const btnNext = document.getElementById('anon-next');
+        const pageInfo = document.getElementById('anon-page-info');
+        let page = 1; const pageSize = 10; let total = 0;
+        let uploadedMedia = [];
+        let currentBoard = 'dating';
+
+        function setActive(board){
+          currentBoard = board;
+          tabs.querySelectorAll('button').forEach(b=> b.classList.toggle('primary', b.getAttribute('data-board')===board));
+          loadPosts();
+        }
+
+        tabs.querySelectorAll('button').forEach(b=> b.addEventListener('click', ()=> setActive(b.getAttribute('data-board'))));
+
+        async function loadPosts(){
+          try{
+            // 如果没有后端，使用本地存储模拟（与感谢墙一致）
+            const storeKey = `anon:${currentBoard}`;
+            let rows = [];
+            try{
+              const r = await LW.api.get(`/api/anon/posts?board=${encodeURIComponent(currentBoard)}&page=${page}&pageSize=${pageSize}`);
+              if(r && Array.isArray(r.items)){
+                rows = r.items; total = r.total||0;
+              }else{ rows = []; total = 0; }
+            }catch(_){ rows = []; }
+            if(!Array.isArray(rows) || rows.length === 0){
+              try{ rows = JSON.parse(localStorage.getItem(storeKey)||'[]'); }catch{ rows = []; }
+              total = rows.length;
+              // 客户端分页
+              const start = (page-1)*pageSize; rows = rows.slice(start, start+pageSize);
+            } else {
+              // 同步备份到本地，作为离线/回退
+              try{ localStorage.setItem(storeKey, JSON.stringify(rows)); }catch(_){ }
+            }
+            const q = (qEl.value||'').trim();
+            if(q){ rows = rows.filter(p => (p.title||'').includes(q) || (p.content||'').includes(q) || (p.tags||'').includes(q)); }
+            renderList(rows||[]);
+            if(pageInfo){ const totalPages = Math.max(1, Math.ceil(total / pageSize)); pageInfo.textContent = `第 ${page}/${totalPages} 页 · 共 ${total} 条`; }
+            if(btnPrev) btnPrev.disabled = page <= 1;
+            if(btnNext) btnNext.disabled = (page * pageSize) >= total && total>0;
+          }catch(e){ renderList([]); }
+        }
+
+        function escape(s){ return String(s||'').replace(/[&<>"']/g, ch=> ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[ch])); }
+        function fmtTags(s){ const arr = String(s||'').split(',').map(t=>t.trim()).filter(Boolean); return arr.map(t=> `<span class="tag">${escape(t)}</span>`).join(' '); }
+
+        function renderList(rows){
+          if(!rows || rows.length===0){ list.innerHTML = '<div class="col-12"><div class="card"><div class="card-body"><p class="muted">暂无内容，来发第一条吧～</p></div></div></div>'; return; }
+          list.innerHTML = rows.map(p=> `
+            <div class="col-12"><div class="card"><div class="card-body post-row">
+              <div>
+                <div class="row"><strong>${escape(p.title||'(无标题)')}</strong><span class="muted" style="font-size:12px">${new Date(p.created_at).toLocaleString()}</span></div>
+                <p class="card-desc">${escape(String(p.content||'').slice(0,300))}${p.content && p.content.length>300?'…':''}</p>
+                <div class="row" style="flex-wrap:wrap;gap:8px">${fmtTags(p.tags)}</div>
+                <div class="row" style="gap:8px">
+                  <button class="btn" data-like="${p.id}">点赞 👍 <span>${p.likes_count||0}</span></button>
+                  <button class="btn" data-cmt-toggle="${p.id}">评论</button>
+                </div>
+                <div class="space"></div>
+                <div class="hidden" id="cmt-box-${p.id}">
+                  <div class="row" style="gap:8px;margin-bottom:8px"><input id="cmt-in-${p.id}" placeholder="写下你的想法（匿名）" /><button class="btn" data-cmt="${p.id}">发送</button></div>
+                  <div id="cmt-list-${p.id}" class="muted"></div>
+                </div>
+              </div>
+              <div>${renderMedia(p.media)}</div>
+            </div></div></div>
+          `).join('');
+
+          // wire like
+          list.querySelectorAll('[data-like]')?.forEach(btn=>{
+            btn.addEventListener('click', async ()=>{
+              const id = btn.getAttribute('data-like');
+              try{
+                const r = await LW.api.post(`/api/anon/posts/${id}/like`, {});
+                const span = btn.querySelector('span'); if(span){ span.textContent = String(r && r.likes || 0); span.classList.add('like-pulse'); setTimeout(()=> span.classList.remove('like-pulse'), 360); }
+                // 本地存储同步点赞数
+                const storeKey = `anon:${currentBoard}`;
+                try{
+                  const arr = JSON.parse(localStorage.getItem(storeKey)||'[]');
+                  const it = arr.find(x=> String(x.id)===String(id)); if(it){ it.likes_count = (r && r.likes) || ((it.likes_count||0)+1); localStorage.setItem(storeKey, JSON.stringify(arr)); }
+                }catch(_){ }
+              }catch(_){
+                // 无后端：本地增加
+                const span = btn.querySelector('span'); if(span){ span.textContent = String((parseInt(span.textContent||'0',10)||0)+1); span.classList.add('like-pulse'); setTimeout(()=> span.classList.remove('like-pulse'), 360); }
+                const storeKey = `anon:${currentBoard}`;
+                try{
+                  const arr = JSON.parse(localStorage.getItem(storeKey)||'[]');
+                  const it = arr.find(x=> String(x.id)===String(id)); if(it){ it.likes_count = (it.likes_count||0)+1; localStorage.setItem(storeKey, JSON.stringify(arr)); }
+                }catch(__){ }
+              }
+            });
+          });
+          // wire comments toggle
+          list.querySelectorAll('[data-cmt-toggle]')?.forEach(btn=>{
+            btn.addEventListener('click', async ()=>{
+              const id = btn.getAttribute('data-cmt-toggle');
+              const box = document.getElementById(`cmt-box-${id}`);
+              if(!box) return; box.classList.toggle('hidden');
+              if(!box.classList.contains('hidden')){ await loadComments(id); }
+            });
+          });
+          // wire send comment
+          list.querySelectorAll('[data-cmt]')?.forEach(btn=>{
+            btn.addEventListener('click', async ()=>{
+              const id = btn.getAttribute('data-cmt');
+              const inp = document.getElementById(`cmt-in-${id}`);
+              const text = (inp && inp.value || '').trim();
+              if(!text) return;
+              try{
+                await LW.api.post(`/api/anon/posts/${id}/comments`, { content: text });
+                // 立即插入到页面下方
+                const listBox = document.getElementById(`cmt-list-${id}`);
+                if(listBox){ const item = document.createElement('div'); item.innerHTML = `💬 ${escape(text)} · <small>${new Date().toLocaleString()}</small>`; listBox.prepend(item); }
+                inp.value='';
+                // 本地备份评论数
+                const storeKey = `anon:${currentBoard}`;
+                try{ const arr = JSON.parse(localStorage.getItem(storeKey)||'[]'); const it = arr.find(x=> String(x.id)===String(id)); if(it){ it.comments_count = (it.comments_count||0)+1; localStorage.setItem(storeKey, JSON.stringify(arr)); } }catch(_){ }
+              }catch(_){
+                // 无后端：直接插入到展示
+                const listBox = document.getElementById(`cmt-list-${id}`);
+                if(listBox){ const item = document.createElement('div'); item.innerHTML = `💬 ${escape(text)} · <small>${new Date().toLocaleString()}</small>`; listBox.prepend(item); }
+                const storeKey = `anon:${currentBoard}`; try{ const arr = JSON.parse(localStorage.getItem(storeKey)||'[]'); const it = arr.find(x=> String(x.id)===String(id)); if(it){ it.comments_count = (it.comments_count||0)+1; localStorage.setItem(storeKey, JSON.stringify(arr)); } }catch(__){}
+                inp.value='';
+              }
+            });
+          });
+        }
+
+        async function loadComments(id){
+          try{
+            const rows = await LW.api.get(`/api/anon/posts/${id}/comments`);
+            const box = document.getElementById(`cmt-list-${id}`);
+            if(!box) return;
+            box.innerHTML = (rows||[]).map(c=> `<div>💬 ${escape(c.content)} · <small>${new Date(c.created_at).toLocaleString()}</small></div>`).join('');
+          }catch(_){ /* ignore */ }
+        }
+
+        function renderMedia(media){
+          let arr = [];
+          if(typeof media === 'string'){ try{ arr = JSON.parse(media||'[]')||[]; }catch{ arr = []; } }
+          else if(Array.isArray(media)){ arr = media; }
+          if(!arr || arr.length===0) return '';
+          const items = arr.slice(0,4).map(u=>{
+            const isImg = /\.(png|jpg|jpeg|gif|webp|bmp|svg)$/i.test(u) || u.startsWith('blob:');
+            if(isImg){ return `<a href="${u}" target="_blank" rel="noreferrer"><img src="${u}" alt="img"/></a>`; }
+            return `<a class="file" href="${u}" target="_blank" rel="noreferrer">📎 附件</a>`;
+          }).join('');
+          return `<div class="post-attachments">${items}</div>`;
+        }
+
+        form.addEventListener('submit', async (e)=>{
+          e.preventDefault();
+          const title = (titleEl.value||'').trim();
+          const content = (contentEl.value||'').trim();
+          const tags = (tagsEl.value||'').split(',').map(s=>s.trim()).filter(Boolean);
+          // 优先使用已上传的服务端 URL，其次用本地 blob 作为占位
+          let media = uploadedMedia.slice(0,4);
+          if(media.length === 0){
+            const files = Array.from(document.getElementById('anon-files')?.files||[]);
+            media = files.slice(0,4).map(f=> URL.createObjectURL(f));
+          }
+          if(!content){ toast('内容不能为空'); return; }
+          try{
+            const payload = { board: currentBoard, title, content, tags, media };
+            // 优先尝试后端
+            try{ await LW.api.post('/api/anon/posts', payload); }catch(_){ /* ignore */ }
+            // 同步写入本地列表，立即可见
+            const storeKey = `anon:${currentBoard}`;
+            let arr = []; try{ arr = JSON.parse(localStorage.getItem(storeKey)||'[]'); }catch{ arr = []; }
+            const now = new Date().toISOString();
+            arr.unshift({ id: Date.now(), board: currentBoard, title, content, tags: tags.join(','), media, likes_count: 0, comments_count: 0, created_at: now });
+            try{ localStorage.setItem(storeKey, JSON.stringify(arr.slice(0,200))); }catch(_){ }
+            titleEl.value=''; contentEl.value=''; tagsEl.value=''; uploadedMedia = [];
+            toast('已发布（匿名）');
+            // 优先追加到列表顶部，避免等待新加载
+            await loadPosts();
+          }catch(_){ toast('发布失败'); }
+        });
+        btnPrev && btnPrev.addEventListener('click', ()=>{ if(page>1){ page--; loadPosts(); } });
+        btnNext && btnNext.addEventListener('click', ()=>{ page++; loadPosts(); });
+
+        // 上传附件到后端，返回 URL
+        document.getElementById('anon-upload')?.addEventListener('click', async ()=>{
+          const inp = document.getElementById('anon-files');
+          const files = Array.from(inp?.files||[]).slice(0,4);
+          if(files.length === 0){ toast('请选择文件'); return; }
+          try{
+            const fd = new FormData(); files.forEach(f=> fd.append('files', f));
+            const res = await fetch('/api/upload', { method:'POST', body: fd });
+            if(!res.ok) throw new Error('upload failed');
+            const data = await res.json();
+            uploadedMedia = (data && Array.isArray(data.files)) ? data.files.map(f=> f.url) : [];
+            toast('上传成功');
+          }catch(e){ toast('上传失败'); }
+        });
+        btnSearch.addEventListener('click', loadPosts);
+        btnMatch.addEventListener('click', async ()=>{
+          // 简易“今日缘分”：从相亲角随机取一条
+          try{
+            const rows = await LW.api.get('/api/anon/posts?board=dating');
+            if(rows && rows.length){
+              const one = rows[Math.floor(Math.random()*rows.length)];
+              toast('今日缘分：' + (one.title || one.content.slice(0,16)+'…'));
+            }else{ toast('今天缘分在路上…'); }
+          }catch(_){ toast('今天缘分在路上…'); }
+        });
+
+        // init
+        setActive('dating');
+      })();
+      const toast = (t)=>{ const el = document.getElementById('toast'); el.textContent=t; el.classList.add('show'); setTimeout(()=>el.classList.remove('show'), 1800); };
+      const showModal = (title, html)=>{ document.getElementById('modal-title').textContent=title; const b=document.getElementById('modal-body'); b.innerHTML=html; document.getElementById('modal-generic').classList.add('show'); };
+      document.getElementById('modal-close').addEventListener('click', ()=> document.getElementById('modal-generic').classList.remove('show'));
+
+      // 祈祷
+      const prayerTexts = [
+        '愿你的实验今天一次过，重复性优秀，误差极小。',
+        '样品稳稳在线，信号清晰如星空。',
+        '灵感拉满，方法突破就在今天。',
+        '数据像溪流一样自洽，统计显著而且漂亮。',
+        '遇到难题也有耐心，慢慢来，一切刚好。',
+        '关键试剂稳定发挥，机器状态满格。',
+        '图版布局顺手，配色和谐，审稿人都点头。',
+        '合作顺利，讨论高效，成果自然汇聚。',
+        '文献里恰好有灵感拼图的一块。',
+        '实验记录详尽清晰，复现毫不费力。',
+        '错误早暴露，问题早发现，节省大把时间。',
+        '每个小步骤都比昨天更熟练。',
+        '思路更清晰一步，负担更轻一点。',
+        '排期合理，节奏稳定，不焦虑也有产出。',
+        '审稿意见化作助力，版本越改越好。',
+        '前期准备扎实，今天收获超预期。',
+        '代码没有 bug，运行速度飞快。',
+        '论文精读一篇，思考得到两点新认识。',
+        '团队互相支持，氛围温暖。',
+        '你已经在路上，未来会感谢现在的你。'
+      ];
+      document.getElementById('btn-prayer').addEventListener('click', ()=>{
+        const stars = Array.from({length:40}).map(()=>`<div class=\"star\" style=\"left:${Math.random()*100}% ; top:${Math.random()*100}% ; animation-delay:${(Math.random()*2).toFixed(2)}s\"></div>`).join('');
+        const text = prayerTexts[Math.floor(Math.random()*prayerTexts.length)];
+        const html = `<div style=\"position:relative\"> <div class=\"stars\">${stars}</div>
+              <p>${text}</p>
+              <audio id=\"bgm\" src=\"../assets/audio/prayer.mp3\" preload=\"none\"></audio>
+              <div class=\"space\"></div><button class=\"btn\" id=\"play-bgm\">播放音乐</button></div>`;
+        showModal('科研人祈祷', html);
+        setTimeout(()=>{ const a=document.getElementById('bgm'); const btn=document.getElementById('play-bgm'); btn && btn.addEventListener('click', ()=> a && a.play().catch(()=>toast('请点击以授权播放')) ); },0);
+      });
+
+      // 木鱼
+      const woodenQuotes = [
+        '实验进展顺利！继续加油！','再试一次，数据就来了！','你已比昨天更进一步','稳住，稳中有进',
+        '每一个小复现，都是大成果的基石。','记录越细，复盘越稳。','保持好奇，问题就会开口。',
+        '多了一次尝试，就多了一次可能。','今天也要温柔地对待自己。','数据不急，慢慢打磨。',
+        '你的方法很扎实，值得被看见。','掌控变量，你就掌控主动权。','困难只是尚未拆解的目标。',
+        '从基础做起，效率自然提高。','学会取舍，专注关键指标。','每一步都算数。',
+        '比昨天更清楚一点，就是胜利。','保持节奏，别被急躁带节奏。','你做得很好。','过程本身就是成长。'
+      ];
+      const wooden = new Audio('../assets/audio/wooden.mp3');
+      document.getElementById('btn-wooden').addEventListener('click', ()=>{ wooden.currentTime=0; wooden.play().catch(()=>{}); toast(woodenQuotes[Math.floor(Math.random()*woodenQuotes.length)]); });
+
+      // 多喝水
+      const fill = document.getElementById('water-fill');
+      const waterTips = [
+        '补水到位，头脑更清醒。','喝口水，让细胞都开心。','水分足，效率高。','小口多次，状态更稳。',
+        '保持水杯在旁边，会更想喝水。','喝水是对身体的温柔照顾。','一口水，一点灵感。',
+        '水到渠成，事半功倍。','补水也能增加耐心。','喝水休息 30 秒，再继续。',
+        '保温杯的温度刚刚好。','喝水也算科学的自我管理。','水杯见底，任务见尾。',
+        '你照顾身体，身体也会回馈你。','今天也要补水打卡！','分段补水，避免疲劳。',
+        '喝完这口，去完成一个小目标。','细胞“干杯”！','水润万物，润你心田。','喝水从现在开始。'
+      ];
+      const waterProgress = document.createElement('span');
+      waterProgress.className='muted';
+      waterProgress.id='water-progress-text';
+      fill.parentElement.parentElement.appendChild(waterProgress);
+      function updateWaterText(h){ waterProgress.textContent = `今日补水进度：${h}% · ${waterTips[Math.floor(Math.random()*waterTips.length)]}`; }
+      document.getElementById('btn-water').addEventListener('click', ()=>{
+        const h=Math.min(100,(parseInt(fill.style.height||'0')||0)+20);
+        fill.style.height=h+'%';
+        for(let i=0;i<4;i++){ const b=document.createElement('div'); b.className='water-bubble'; b.style.left=(10+Math.random()*100)+'px'; b.style.bottom='0'; b.style.animationDuration=(1.6+Math.random()*1.4)+'s'; fill.appendChild(b); setTimeout(()=>b.remove(),2400); }
+        updateWaterText(h);
+      });
+      let remindTimer; document.getElementById('btn-water-remind').addEventListener('click', ()=>{ const mins=prompt('每隔多少分钟提醒一次？(5-120)','30'); const n=parseInt(mins,10); if(!n||n<5||n>120){ toast('已取消'); return;} if(remindTimer) clearInterval(remindTimer); remindTimer=setInterval(()=> toast('喝口水，保持活力！'), n*60*1000); toast('提醒已设置'); });
+
+      // 别生气
+      const calmTexts = [
+        '科研路漫漫，保持冷静，未来是光明的！','深呼吸，缓一缓，再向前。','暂停 3 分钟，喝口水，继续。',
+        '把问题拆小一点，一次解决一块。','不是你不行，是任务太大了，慢慢来。','休息是为了走更远的路。',
+        '客观看待波动，今天也许只是噪声。','你已经做得很好了，别对自己太苛刻。','把注意力放在能掌控的变量上。',
+        '去散个步，回来就有新思路。','把进度写下来，你会看到自己的努力。','善待自己，善待数据。',
+        '情绪会过去，成果会留下。','这只是过程的一部分。','今天的耐心，就是明天的结果。',
+        '你不是一个人，我们都在同一条科研路上。','请给自己一点时间。','你值得被肯定。',
+        '放过自己，放过数据。','慢一点，反而会更快。'
+      ];
+      document.getElementById('btn-calm').addEventListener('click', ()=>{
+        const t = calmTexts[Math.floor(Math.random()*calmTexts.length)];
+        const html=`<p>${t}</p><div class=\"space\"></div><img src=\"../assets/img/slide2.svg\" alt=\"calm\" style=\"border-radius:12px;border:1px solid var(--border)\"/><div class=\"space\"></div><audio id=\"calm-a\" src=\"../assets/audio/calm.mp3\" preload=\"none\"></audio><button class=\"btn\" id=\"calm-play\">播放舒缓音效</button>`;
+        showModal('别生气', html);
+        setTimeout(()=>{ const a=document.getElementById('calm-a'); const b=document.getElementById('calm-play'); b && b.addEventListener('click', ()=> a && a.play().catch(()=>toast('请点击以授权播放')) ); },0);
+      });
+
+      // 每日挑战
+      const prog=document.getElementById('challenge-progress'); const saved=parseInt(localStorage.getItem('challenge:progress')||'0',10); prog.style.width=Math.min(100,saved)+'%';
+      const challengeTasks = [
+        '完成一次细胞计数','整理一张图版','复现实验步骤并记录','复核一组统计','清理数据缺失项',
+        '重跑一次关键代码并加上断言','补齐一段方法学说明','画出一张流程图','补拍一张仪器操作照片','完善一次实验记录',
+        '复查 10 行数据的来源','列 3 个可能的误差来源','把核心图表导出高分辨率版本','把一个问题发给导师/同伴','绘制一张实验示意草图',
+        '优化一个参数并记录影响','写 3 句话总结今日进展','给未来的自己留一句提醒','打包备份一次数据','给仓库写一个 README 小节'
+      ];
+      document.getElementById('btn-challenge').addEventListener('click', ()=>{ toast('今日挑战：'+challengeTasks[Math.floor(Math.random()*challengeTasks.length)]); });
+      document.getElementById('btn-challenge-done').addEventListener('click', ()=>{ const w=Math.min(100,(parseInt(prog.style.width)||0)+20); prog.style.width=w+'%'; localStorage.setItem('challenge:progress', String(w)); toast(w>=100?'挑战完成！👍':'进度 +20%'); });
+
+      // 心情测试
+      const moodOutputs = [
+        '状态很好，保持节奏，成果可期！','给自己一点空间，喝口水再上。','稳扎稳打，每天+1%，你已在路上。',
+        '今天的你很棒，继续保持耐心与专注。','遇到卡点不代表退步，而是积累势能。','慢一些也很好，关键是方向正确。',
+        '把注意力放在可控项，心会更稳。','记录你的思考，这是你最宝贵的产出。','分阶段完成任务，你会更轻松。',
+        '和昨天比前进一点，就值得夸奖。','科学需要时间，你也需要时间。','照顾好自己，科研会更长久。',
+        '你正在成为更好的研究者。','耐心是你的超能力。','请相信长期主义的力量。',
+        '不必完美，持续迭代就好。','今天也值得被肯定。','你正在累积好运气。',
+        '生活与科研都在向前。','你已足够努力，世界会回馈你。'
+      ];
+      document.getElementById('btn-mood').addEventListener('click', ()=>{ const html=`<form id=\"mood-form\"><label>今天的数据感觉如何？</label><select name=\"d1\"><option>很棒</option><option>一般</option><option>糟糕</option></select><label>实验推进进度？</label><select name=\"d2\"><option>顺利</option><option>卡住</option></select><label>心情状态？</label><select name=\"d3\"><option>轻松</option><option>紧张</option></select><div class=\"space\"></div><button class=\"btn\" type=\"submit\">生成评语</button></form>`; showModal('科研心情测试', html); setTimeout(()=>{ const f=document.getElementById('mood-form'); f && f.addEventListener('submit', (e)=>{ e.preventDefault(); const d=new FormData(f); const a=d.get('d1'), b=d.get('d2'), c=d.get('d3'); let msg=''; if(a==='很棒' && b==='顺利') msg=moodOutputs[0]; else if(c==='紧张') msg=moodOutputs[1]; else msg=moodOutputs[2 + Math.floor(Math.random()*(moodOutputs.length-2))]; toast(msg); }); },0); });
+
+      // 今日抽签
+      const fortunes = [
+        '今天的关键字：稳定。把控变量，你就赢了上半场。','灵感来自耐心，方法高于灵感。','对照组的细节决定成败。',
+        '记录越详细，复现实验越轻松。','先验证关键假设，再扩展细节。','今天适合做一次复盘。',
+        '试剂状态良好，适合推进关键实验。','重视负结果，它们在指路。','善用图表，可视化发现更多线索。',
+        '检查误差来源，会有惊喜。','今天适合打磨图版。','优化一个参数，看看变化。',
+        '写 5 行总结，会清爽很多。','把问题拆解，你就更自由。','备份一次数据，安心做实验。',
+        '与同伴交流，灵感会加倍。','读一段文献，填上一块拼图。','把 TODO 减一项，继续前进。',
+        '今天是收获的一天。','你已在正确的路上。'
+      ];
+      document.getElementById('btn-fortune')?.addEventListener('click', ()=>{
+        const t = fortunes[Math.floor(Math.random()*fortunes.length)];
+        const box = document.getElementById('fortune-text');
+        if(box){ box.textContent = t; }
+      });
+
+      // 小猫来到世界时间（自 2023-09-05 起）
+      (function(){
+        const el = document.getElementById('cat-age');
+        if(!el) return;
+        const birth = new Date('2023-09-05T00:00:00');
+        function tick(){
+          const msInMin = 60*1000, msInHour = 60*msInMin, msInDay = 24*msInHour;
+          const now = new Date();
+          const adj = new Date(now.getTime() - msInDay); // 减去 1 天
+          const daysTotal = Math.floor((adj - birth)/msInDay);
+          // 粗略按 365 天为一年计算年与余天
+          const years = Math.floor(daysTotal / 365);
+          const daysRem = daysTotal % 365;
+          const todayMs = (adj - birth) - daysTotal*msInDay;
+          const hours = Math.floor(todayMs / msInHour);
+          const minutes = Math.floor((todayMs % msInHour) / msInMin);
+          const seconds = Math.floor((todayMs % msInMin) / 1000);
+          el.textContent = `${years}年${daysRem}天${hours}时${minutes}分${seconds}秒`;
+        }
+        tick();
+        setInterval(tick, 1000);
+      })();
+
+      // 云养猫：点赞（撸一下）计数
+      const likeKey = (id)=> `cats:like:${id}`;
+      const updateLike = (id, delta)=>{
+        const el = document.getElementById(`cat-like-${id}`);
+        if(!el) return;
+        const cur = parseInt(localStorage.getItem(likeKey(id))||'0',10);
+        const next = Math.max(0, cur + (delta||0));
+        localStorage.setItem(likeKey(id), String(next));
+        el.textContent = String(next);
+      };
+      [1,2,3].forEach(id=>{
+        updateLike(id, 0);
+        const btn = document.getElementById(`btn-cat-like-${id}`);
+        btn && btn.addEventListener('click', ()=>{ updateLike(id, 1); toast('猫猫被温柔地撸了一下'); });
+      });
+
+      // 云养猫：投喂记录（本地存储模拟）
+      const feedStoreKey = 'cats:feeds';
+      const loadFeeds = ()=>{ try{ return JSON.parse(localStorage.getItem(feedStoreKey)||'[]'); }catch{ return []; } };
+      const saveFeeds = (arr)=> localStorage.setItem(feedStoreKey, JSON.stringify(arr));
+      const feedList = document.getElementById('feed-list');
+      const renderFeeds = ()=>{
+        const feeds = loadFeeds();
+        if(!feedList) return;
+        feedList.innerHTML = feeds.slice(-20).reverse().map(f=>{
+          const n = f.name && f.name.trim() ? f.name.trim() : '匿名喵友';
+          const m = f.msg && f.msg.trim() ? `：${f.msg.trim()}` : '';
+          const a = f.amount ? `（¥${f.amount}）` : '';
+          return `<li>❤ ${n}${m} ${a} · <small>${f.time}</small></li>`;
+        }).join('');
+      };
+      renderFeeds();
+
+      // 快捷投喂按钮
+      document.querySelectorAll('[data-feed]')?.forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+          const amount = parseInt(btn.getAttribute('data-feed')||'0',10) || 0;
+          const name = (document.getElementById('feed-name')?.value||'').trim();
+          const msg  = (document.getElementById('feed-msg')?.value||'').trim();
+          const feeds = loadFeeds();
+          feeds.push({ name, msg, amount, time: new Date().toLocaleString() });
+          saveFeeds(feeds);
+          renderFeeds();
+          toast(`已投喂 ¥${amount}，谢谢你的爱心！`);
+        });
+      });
+
+      // 留言提交（不含金额）
+      const feedForm = document.getElementById('feed-form');
+      feedForm && feedForm.addEventListener('submit', (e)=>{
+        e.preventDefault();
+        const name = (document.getElementById('feed-name')?.value||'').trim();
+        const msg  = (document.getElementById('feed-msg')?.value||'').trim();
+        const feeds = loadFeeds();
+        feeds.push({ name, msg, amount: 0, time: new Date().toLocaleString() });
+        saveFeeds(feeds);
+        renderFeeds();
+        (document.getElementById('feed-msg')||{}).value='';
+        toast('留言已提交，感谢支持！');
+      });
+    });
+  </script>
+</body>
+</html>
+
+

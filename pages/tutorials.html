@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>教程中心 · 老王研究所</title>
+  <link rel="stylesheet" href="../assets/css/style.css" />
+  <script defer src="../assets/js/main.js"></script>
+</head>
+<body>
+  <div id="header"></div>
+  <main class="container">
+    <section>
+      <h2 class="section-title">教程中心</h2>
+      <div class="row">
+        <input id="q" placeholder="搜索主题/工具/关键词" style="max-width:360px" />
+        <select id="level">
+          <option value="">全部难度</option>
+          <option>基础</option>
+          <option>进阶</option>
+        </select>
+        <select id="type">
+          <option value="">全部类型</option>
+          <option>图文</option>
+          <option>视频</option>
+        </select>
+      </div>
+      <div class="space"></div>
+      <div id="list" class="grid"></div>
+    </section>
+  </main>
+  <div id="footer"></div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const data = await LW.fetchJSON('../data/tutorials.json').catch(()=>[]);
+      const listEl = document.getElementById('list');
+      const qEl = document.getElementById('q');
+      const levelEl = document.getElementById('level');
+      const typeEl = document.getElementById('type');
+      function render(){
+        const q = (qEl.value||'').toLowerCase();
+        const level = levelEl.value; const type = typeEl.value;
+        const arr = data.filter(t => (!level || t.level===level) && (!type || t.type===type) && (!q || (t.title+t.desc+(t.tags||[]).join(' ')).toLowerCase().includes(q)));
+        listEl.innerHTML = arr.map(t => `
+          <div class=\"col-4\"><div class=\"card\"><div class=\"card-body\">
+            <div class=\"row\"><strong>${t.title}</strong><span class=\"tag\">${t.level}</span><span class=\"tag\">${t.type}</span></div>
+            <p class=\"card-desc\">${t.desc}</p>
+            <div class=\"row\">${(t.tags||[]).map(x=>`<span class=\\\"tag\\\">${x}</span>`).join('')}</div>
+            <div class=\"card-actions\">
+              ${t.membership?`<button class=\"btn primary\" onclick=\"openLesson('${t.id}')\">会员专属</button>`:`<a class=\"btn\" href=\"${t.link}\" target=\"_blank\">查看</a>`}
+            </div>
+          </div></div></div>`).join('');
+      }
+      window.openLesson = function(id){
+        if(!LW.ensureAuth('premium')) return;
+        const t = data.find(x=>x.id===id);
+        if(t && t.link) window.open(t.link,'_blank');
+      }
+      qEl.addEventListener('input', render);
+      levelEl.addEventListener('change', render);
+      typeEl.addEventListener('change', render);
+      render();
+    });
+    // Ad slot
+    document.addEventListener('DOMContentLoaded', ()=>{
+      const adWrap = document.createElement('section');
+      adWrap.innerHTML = '<div id="ad-tutorials"></div>';
+      document.querySelector('main.container').appendChild(adWrap);
+      LW.renderAd('#ad-tutorials');
+    });
+  </script>
+</body>
+</html>
+
+

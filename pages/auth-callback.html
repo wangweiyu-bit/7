@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>登录中…</title>
+  <link rel="stylesheet" href="../assets/css/style.css" />
+  <script defer src="../assets/js/main.js"></script>
+  <style>
+    main.container { min-height: 50vh; display: grid; place-items: center; }
+  </style>
+  <script>
+    // just to show a message if JS loads before main.js handles callback
+    document.addEventListener('DOMContentLoaded', function(){
+      var el = document.getElementById('msg');
+      if(el) el.textContent = '正在完成登录，请稍候…';
+    });
+  </script>
+  </head>
+  <body>
+    <div id="header"></div>
+    <main class="container">
+      <section>
+        <div class="card">
+          <div class="card-body">
+            <h2 class="section-title">微信登录回调</h2>
+            <p id="msg">请稍候…</p>
+          </div>
+        </div>
+      </section>
+    </main>
+    <div id="footer"></div>
+  </body>
+  </html>
+
+

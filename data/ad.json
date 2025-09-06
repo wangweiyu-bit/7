@@ -1,0 +1,11 @@
+{
+  "enabled": true,
+  "title": "商务合作 / 广告位",
+  "desc": "支持科研相关投放（工具/课程/会议/器材）。投放请联系：contact@example.com 或添加微信二维码。",
+  "image": "assets/img/4.png",
+  "ctaText": "咨询投放",
+  "ctaLink": "mailto:contact@example.com?subject=%E5%B9%BF%E5%91%8A%E6%8A%95%E6%94%BE%E5%90%88%E4%BD%9C",
+  "badge": "AD"
+}
+
+
